@@ -1,12 +1,19 @@
 package com.dovile.bankspaymentstransfer.entities;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.Temporal;
+import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+import javax.persistence.TemporalType;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -14,20 +21,8 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "payments")
-@NamedQueries({
-        @NamedQuery(name = "Payments.findAll", query = "SELECT p FROM PaymentsEntity p"),
-        @NamedQuery(name = "Payments.findById", query = "SELECT p FROM PaymentsEntity p WHERE p.id = :id"),
-        @NamedQuery(name = "Payments.findByAmount", query = "SELECT p FROM PaymentsEntity p WHERE p.amount = :amount"),
-        @NamedQuery(name = "Payments.findByDebtorIban", query = "SELECT p FROM PaymentsEntity p WHERE p.debtorIban = :debtorIban"),
-        @NamedQuery(name = "Payments.findByCreditorIban", query = "SELECT p FROM PaymentsEntity p WHERE p.creditorIban = :creditorIban"),
-        @NamedQuery(name = "Payments.findByAdditionalField", query = "SELECT p FROM PaymentsEntity p WHERE p.additionalField = :additionalField"),
-        @NamedQuery(name = "Payments.findByStatus", query = "SELECT p FROM PaymentsEntity p WHERE p.status = :status"),
-        @NamedQuery(name = "Payments.findByPaymentDate", query = "SELECT p FROM PaymentsEntity p WHERE p.paymentDate = :paymentDate")})
-public class PaymentsEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@NamedQuery(name = "Payments.findByStatus", query = "SELECT p FROM PaymentsEntity p WHERE p.status = :status")
+public class PaymentsEntity extends BaseEntity {
 
     private BigDecimal amount;
     @Column(name = "debtor_iban")
@@ -36,39 +31,22 @@ public class PaymentsEntity {
     private String creditorIban;
     @Column(name = "additional_field")
     private String additionalField;
-    private Boolean status;
+    private Boolean status=true;
     @Column(name = "payment_date")
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date paymentDate;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "paymentsId")
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "payments")
     private CancelPaymentEntity cancelPayment;
     @JoinColumn(name = "currency_data_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private CurrencyDataEntity currencyDataId;
+    private CurrencyDataEntity currencyData;
     @JoinColumn(name = "payment_type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private PaymentTypeEntity paymentTypeId;
+    private PaymentTypeEntity paymentType;
 
     public PaymentsEntity() {
-    }
-
-    public PaymentsEntity(Integer id) {
-        this.id = id;
-    }
-
-    public PaymentsEntity(Integer id, BigDecimal amount, String debtorIban, String creditorIban) {
-        this.id = id;
-        this.amount = amount;
-        this.debtorIban = debtorIban;
-        this.creditorIban = creditorIban;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public BigDecimal getAmount() {
@@ -127,19 +105,19 @@ public class PaymentsEntity {
         this.cancelPayment = cancelPayment;
     }
 
-    public CurrencyDataEntity getCurrencyDataId() {
-        return currencyDataId;
+    public CurrencyDataEntity getCurrencyData() {
+        return currencyData;
     }
 
-    public void setCurrencyDataId(CurrencyDataEntity currencyDataId) {
-        this.currencyDataId = currencyDataId;
+    public void setCurrencyData(CurrencyDataEntity currencyData) {
+        this.currencyData = currencyData;
     }
 
-    public PaymentTypeEntity getPaymentTypeId() {
-        return paymentTypeId;
+    public PaymentTypeEntity getPaymentType() {
+        return paymentType;
     }
 
-    public void setPaymentTypeId(PaymentTypeEntity paymentTypeId) {
-        this.paymentTypeId = paymentTypeId;
+    public void setPaymentType(PaymentTypeEntity paymentType) {
+        this.paymentType = paymentType;
     }
 }

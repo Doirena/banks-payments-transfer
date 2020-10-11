@@ -1,15 +1,12 @@
 package com.dovile.bankspaymentstransfer.entities;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.OneToOne;
@@ -21,51 +18,27 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "cancel_payment")
-@NamedQueries({
-        @NamedQuery(name = "CancelPayment.findAll", query = "SELECT c FROM CancelPaymentEntity c"),
-        @NamedQuery(name = "CancelPayment.findById", query = "SELECT c FROM CancelPaymentEntity c WHERE c.id = :id"),
-        @NamedQuery(name = "CancelPayment.findByAmount", query = "SELECT c FROM CancelPaymentEntity c WHERE c.amount = :amount"),
-        @NamedQuery(name = "CancelPayment.findByPaymentDate", query = "SELECT c FROM CancelPaymentEntity c WHERE c.paymentDate = :paymentDate")})
-public class CancelPaymentEntity {
+public class CancelPaymentEntity extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private BigDecimal amount;
+    @Column(name = "cancel_fee")
+    private BigDecimal cancelFee;
     @Column(name = "payment_date")
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date paymentDate;
     @JoinColumn(name = "payments_id", referencedColumnName = "id")
     @OneToOne(optional = false)
-    private PaymentsEntity paymentsId;
+    private PaymentsEntity payments;
 
     public CancelPaymentEntity() {
     }
 
-    public CancelPaymentEntity(Integer id) {
-        this.id = id;
+    public BigDecimal getCancelFee() {
+        return cancelFee;
     }
 
-    public CancelPaymentEntity(Integer id, BigDecimal amount) {
-        this.id = id;
-        this.amount = amount;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setCancelFee(BigDecimal cancelFee) {
+        this.cancelFee = cancelFee;
     }
 
     public Date getPaymentDate() {
@@ -76,11 +49,11 @@ public class CancelPaymentEntity {
         this.paymentDate = paymentDate;
     }
 
-    public PaymentsEntity getPaymentsId() {
-        return paymentsId;
+    public PaymentsEntity getPayments() {
+        return payments;
     }
 
-    public void setPaymentsId(PaymentsEntity paymentsId) {
-        this.paymentsId = paymentsId;
+    public void setPayments(PaymentsEntity payments) {
+        this.payments = payments;
     }
 }
