@@ -2,6 +2,7 @@ package com.dovile.bankspaymentstransfer.services;
 
 import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
+import com.dovile.bankspaymentstransfer.domain.response.PaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
 import com.dovile.bankspaymentstransfer.entities.CancelPaymentEntity;
 import com.dovile.bankspaymentstransfer.entities.CurrencyDataEntity;
@@ -23,12 +24,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 @Service
 public class PaymentServiceImpl implements PaymentService {
+
+    private final static Logger logger = Logger.getLogger(PaymentServiceImpl.class.getName());
 
     @Autowired
     PaymentsEntityRepository paymentsEntityRepository;
@@ -43,12 +47,13 @@ public class PaymentServiceImpl implements PaymentService {
     CancelPaymentEntityRepository cancelPaymentEntityRepository;
 
     @Override
-    public PaymentsEntity createPayment(PaymentsRequest request, String type, String currency) throws ResourceNotFoundException, BadInputException {
+    public PaymentResponse createPayment(PaymentsRequest request, String type, String currency) throws ResourceNotFoundException, BadInputException {
         PaymentsEntity paymentsEntity = new PaymentsEntity();
         PaymentTypeEntity paymentTypeEntity = paymentTypeEntityRepository.findByTypeName(type);
         if (paymentTypeEntity != null) {
             paymentsEntity.setPaymentType(paymentTypeEntity);
         } else {
+            logger.warning("Bad TYPE");
             throw new ResourceNotFoundException("Please insert a correct Type");
         }
 
@@ -76,18 +81,21 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new BadInputException("Bad currency type");
             }
         } else {
+            logger.warning("Bad Currency");
             throw new ResourceNotFoundException("Please insert a correct Currency");
         }
         paymentsEntity.setAmount(request.getAmount());
         paymentsEntity.setDebtorIban(request.getDebtorIban());
         paymentsEntity.setCreditorIban(request.getCreditorIban());
-        paymentsEntityRepository.save(paymentsEntity);
-        return paymentsEntity;
+        PaymentsEntity newPayment = paymentsEntityRepository.save(paymentsEntity);
+        logger.info("Create new payment");
+        return new PaymentResponse(newPayment.getId(), newPayment.getAmount(),
+                newPayment.getDebtorIban(), newPayment.getCreditorIban(), newPayment.getAdditionalField());
     }
 
     @Transactional
     @Override
-    public CancelPaymentEntity cancelPayment(Integer id) throws ResourceNotFoundException {
+    public CancelPaymentResponse cancelPayment(Integer id) throws ResourceNotFoundException {
         PaymentsEntity paymentsEntity = paymentsEntityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment not found on: " + id));
 
@@ -112,8 +120,9 @@ public class PaymentServiceImpl implements PaymentService {
         //Cancel payment create and update payment status;
         paymentsEntity.setStatus(false);
         paymentsEntityRepository.save(paymentsEntity);
-        cancelPaymentEntityRepository.save(cancelPaymentEntity);
-        return cancelPaymentEntity;
+        CancelPaymentEntity updateCancel = cancelPaymentEntityRepository.save(cancelPaymentEntity);
+        logger.info("Create cancel payment");
+        return new CancelPaymentResponse(updateCancel.getPayments().getId(), updateCancel.getCancelFee());
     }
 
     @Override

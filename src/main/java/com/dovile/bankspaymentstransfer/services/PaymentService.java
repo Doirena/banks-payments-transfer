@@ -2,6 +2,7 @@ package com.dovile.bankspaymentstransfer.services;
 
 import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
+import com.dovile.bankspaymentstransfer.domain.response.PaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
 import com.dovile.bankspaymentstransfer.entities.CancelPaymentEntity;
 import com.dovile.bankspaymentstransfer.entities.PaymentsEntity;
@@ -21,7 +22,7 @@ public interface PaymentService {
      * @param currency
      * @return new Payments
      */
-    PaymentsEntity createPayment(PaymentsRequest request, String type, String currency) throws ResourceNotFoundException, BadInputException;
+    PaymentResponse createPayment(PaymentsRequest request, String type, String currency) throws ResourceNotFoundException, BadInputException;
 
     /**
      *
@@ -29,7 +30,7 @@ public interface PaymentService {
      * @return cancel Payment
      * @throws ResourceNotFoundException
      */
-    CancelPaymentEntity cancelPayment(Integer id) throws ResourceNotFoundException;
+    CancelPaymentResponse cancelPayment(Integer id) throws ResourceNotFoundException;
 
     /**
      *
