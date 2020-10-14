@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.OneToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.TemporalType;
 
 /**
@@ -18,6 +19,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "cancel_payment")
+@NamedQuery(name = "CancelPaymentEntity.findPaymentID", query = "SELECT c FROM CancelPaymentEntity c join c.payments p WHERE (p.id = :id)")
 public class CancelPaymentEntity extends BaseEntity{
 
     @Column(name = "cancel_fee")
