@@ -1,4 +1,4 @@
-package com.dovile.bankspaymentstransfer.exeptions;
+package com.dovile.bankspaymentstransfer.exceptions;
 
 import java.util.Date;
 
