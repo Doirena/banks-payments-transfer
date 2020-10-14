@@ -1,11 +1,24 @@
-package com.dovile.bankspaymentstransfer.domain;
+package com.dovile.bankspaymentstransfer.domain.request;
 
+import com.dovile.bankspaymentstransfer.validator.IbanNumber;
+
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
-public class PaymentsRequest {
+/**
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 
+public class PaymentsRequest {
+    @NotNull(message = "Please provide a amount")
+    @DecimalMin(value = "0.01", message = "Minimum amount is 0.01")
+    @Digits(integer=7, fraction=2)
     private BigDecimal amount;
+    @NotEmpty(message = "Please provide a debtorIban")
+    @IbanNumber(message = "Bad debtorIban")
     private String debtorIban;
+    @NotEmpty(message = "Please provide a creditorIban")
+    @IbanNumber(message = "Bad credIban")
     private String creditorIban;
     private String additionalField;
 
