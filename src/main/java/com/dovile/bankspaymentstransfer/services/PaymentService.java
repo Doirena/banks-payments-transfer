@@ -5,8 +5,8 @@ import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
 import com.dovile.bankspaymentstransfer.entities.CancelPaymentEntity;
 import com.dovile.bankspaymentstransfer.entities.PaymentsEntity;
-import com.dovile.bankspaymentstransfer.exeptions.BadInputException;
-import com.dovile.bankspaymentstransfer.exeptions.ResourceNotFoundException;
+import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
+import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 
