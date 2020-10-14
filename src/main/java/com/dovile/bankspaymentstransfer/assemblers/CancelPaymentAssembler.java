@@ -2,7 +2,6 @@ package com.dovile.bankspaymentstransfer.assemblers;
 
 import com.dovile.bankspaymentstransfer.controller.PaymentController;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
-import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
