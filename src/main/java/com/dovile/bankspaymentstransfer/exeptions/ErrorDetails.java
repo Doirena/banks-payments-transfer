@@ -1,7 +1,10 @@
-package com.dovile.bankspaymentstransfer.exception;
+package com.dovile.bankspaymentstransfer.exeptions;
 
 import java.util.Date;
 
+/**
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 public class ErrorDetails {
     private Date timestamp;
     private String message;
