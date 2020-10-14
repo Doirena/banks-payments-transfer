@@ -1,5 +1,4 @@
 package com.dovile.bankspaymentstransfer.domain.response;
-
 import java.math.BigDecimal;
 
 public class CancelPaymentResponse extends PaymentsIdResponse {
@@ -15,7 +14,4 @@ public class CancelPaymentResponse extends PaymentsIdResponse {
         return cancelFee;
     }
 
-    public void setCancelFee(BigDecimal cancelFee) {
-        this.cancelFee = cancelFee;
-    }
 }
