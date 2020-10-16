@@ -1,56 +1,44 @@
 package com.dovile.bankspaymentstransfer.domain.request;
 
-import com.dovile.bankspaymentstransfer.validator.IbanNumber;
-
-import javax.validation.constraints.*;
-import java.math.BigDecimal;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
-
 public class PaymentsRequest {
-    @NotNull(message = "Please provide a amount")
-    @DecimalMin(value = "0.01", message = "Minimum amount is 0.01")
-    @Digits(integer=7, fraction=2)
-    private BigDecimal amount;
-    @NotEmpty(message = "Please provide a debtorIban")
-    @IbanNumber(message = "Bad debtorIban")
+    private String amount;
+    @NotEmpty(message = "Please fill in debtorIban field")
     private String debtorIban;
-    @NotEmpty(message = "Please provide a creditorIban")
-    @IbanNumber(message = "Bad credIban")
+    @NotEmpty(message = "Please fill in creditorIban field")
     private String creditorIban;
-    private String additionalField;
+    private String details;
+    private String bic_code;
 
-    public BigDecimal getAmount() {
-        return amount;
+    public PaymentsRequest(String amount,String debtorIban, String creditorIban, String details, String bic_code) {
+        this.amount = amount;
+        this.debtorIban = debtorIban;
+        this.creditorIban = creditorIban;
+        this.details = details;
+        this.bic_code = bic_code;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public String getAmount() {
+        return amount;
     }
 
     public String getDebtorIban() {
         return debtorIban;
     }
 
-    public void setDebtorIban(String debtorIban) {
-        this.debtorIban = debtorIban;
-    }
-
     public String getCreditorIban() {
         return creditorIban;
     }
 
-    public void setCreditorIban(String creditorIban) {
-        this.creditorIban = creditorIban;
+    public String getDetails() {
+        return details;
     }
 
-    public String getAdditionalField() {
-        return additionalField;
-    }
-
-    public void setAdditionalField(String additionalField) {
-        this.additionalField = additionalField;
+    public String getBic_code() {
+        return bic_code;
     }
 }
