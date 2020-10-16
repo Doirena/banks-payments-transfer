@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 @Repository
 public interface CancelPaymentEntityRepository extends JpaRepository<CancelPaymentEntity, Integer> {
     @Query(name = "CancelPaymentEntity.findPaymentID")
-    CancelPaymentEntity findPaymentID(@Param("id") Integer id);
+    Optional<CancelPaymentEntity> findPaymentID(@Param("id") Integer id);
 }
