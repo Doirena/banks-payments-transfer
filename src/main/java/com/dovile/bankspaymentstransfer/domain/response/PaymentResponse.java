@@ -1,51 +1,42 @@
 package com.dovile.bankspaymentstransfer.domain.response;
 
-import java.math.BigDecimal;
-
+/**
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 public class PaymentResponse extends PaymentsIdResponse {
 
-    private BigDecimal amount;
+    private Double amount;
     private String debtorIban;
     private String creditorIban;
-    private String additionalField;
+    private String details;
+    private String bic_code;
 
-    public PaymentResponse(Integer paymentId, BigDecimal amount, String debtorIban, String creditorIban, String additionalField) {
+    public PaymentResponse(Integer paymentId, Double amount, String debtorIban, String creditorIban, String details, String bic_code) {
         super(paymentId);
         this.amount = amount;
         this.debtorIban = debtorIban;
         this.creditorIban = creditorIban;
-        this.additionalField = additionalField;
+        this.details = details;
+        this.bic_code = bic_code;
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public String getDebtorIban() {
         return debtorIban;
     }
 
-    public void setDebtorIban(String debtorIban) {
-        this.debtorIban = debtorIban;
-    }
-
     public String getCreditorIban() {
         return creditorIban;
     }
 
-    public void setCreditorIban(String creditorIban) {
-        this.creditorIban = creditorIban;
+    public String getDetails() {
+        return details;
     }
 
-    public String getAdditionalField() {
-        return additionalField;
-    }
-
-    public void setAdditionalField(String additionalField) {
-        this.additionalField = additionalField;
+    public String getBic_code() {
+        return bic_code;
     }
 }

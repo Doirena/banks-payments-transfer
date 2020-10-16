@@ -1,5 +1,8 @@
 package com.dovile.bankspaymentstransfer.domain.response;
 
+/**
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 public class PaymentsIdResponse {
     private Integer paymentId;
 
@@ -14,4 +17,5 @@ public class PaymentsIdResponse {
     public void setPaymentId(Integer paymentId) {
         this.paymentId = paymentId;
     }
+
 }

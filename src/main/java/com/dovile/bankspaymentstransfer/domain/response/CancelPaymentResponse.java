@@ -1,17 +1,22 @@
 package com.dovile.bankspaymentstransfer.domain.response;
-import java.math.BigDecimal;
 
+/**
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 public class CancelPaymentResponse extends PaymentsIdResponse {
 
-    private BigDecimal cancelFee;
+    private Double cancelFee;
 
-    public CancelPaymentResponse(Integer paymentId, BigDecimal cancelFee) {
+    public CancelPaymentResponse(Integer paymentId, Double cancelFee) {
         super(paymentId);
         this.cancelFee = cancelFee;
     }
 
-    public BigDecimal getCancelFee() {
+    public Double getCancelFee() {
         return cancelFee;
     }
 
+    public void setCancelFee(Double cancelFee) {
+        this.cancelFee = cancelFee;
+    }
 }
