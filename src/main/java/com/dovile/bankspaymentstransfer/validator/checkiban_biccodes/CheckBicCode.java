@@ -9,46 +9,40 @@ import java.util.Map;
  */
 public class CheckBicCode {
 
-    private final int TYPE1_BICCODE = 8;
-    private final int TYPE2_BICCODE = 11;
+    private final int BIC_CODE_LENGHT_8 = 8;
+    private final int BIC_CODE_LENGHT_11 = 11;
 
     //Is Valid
-    public boolean isValidBicCode(String bicCode) {
+    public boolean isBICCodeValid(String bicCode) {
         if (bicCode != null) {
             bicCode = bicCode.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
-            if (bicCode.length() == TYPE1_BICCODE || bicCode.length() == TYPE2_BICCODE) {
-                return checkLetters(bicCode);
+            if (bicCode.length() == BIC_CODE_LENGHT_8 || bicCode.length() == BIC_CODE_LENGHT_11) {
+                return isOnlyLetters(bicCode);
             }
         }
         return false;
     }
 
     // Just letters
-    private boolean checkLetters(String code) {
-        if (!checkLettersOrDigits(code)) {
-            return false;
+    private boolean isOnlyLetters(String code) {
+        if (isOnlyLettersDigits(code)) {
+            String newCode = code.substring(0, 4);
+            return ((!newCode.equals(""))
+                    && (newCode != null)
+                    && (newCode.matches("^[a-zA-Z]*$")));
         }
-        String newCode = code.substring(0, 4);
-        for (int i = 0; i < newCode.length(); i++) {
-            if (!Character.isLetter(newCode.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+        return false;
     }
 
     //Check it is letter or numbers
-    private boolean checkLettersOrDigits(String code) {
-        if (!checkCountryCode(code)) {
-            return false;
+    private boolean isOnlyLettersDigits(String code) {
+        if (checkCountryCode(code)) {
+            String newCode = code.substring(6);
+            return ((!newCode.equals(""))
+                    && (newCode != null)
+                    && (newCode.matches("^[a-zA-Z0-9]*$")));
         }
-        String newCode = code.substring(6);
-        for (int i = 0; i < newCode.length(); i++) {
-            if (!Character.isLetterOrDigit(newCode.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+        return false;
     }
 
     //Check Bic code has right country code
