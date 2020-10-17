@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 @Component
 public class CancelPaymentAssembler implements RepresentationModelAssembler<CancelPaymentResponse, EntityModel<CancelPaymentResponse>> {
 
@@ -19,7 +22,7 @@ public class CancelPaymentAssembler implements RepresentationModelAssembler<Canc
         try {
             return EntityModel.of(cancelPaymentResponse,
                     linkTo(methodOn(PaymentController.class).getCancelPaymentById(cancelPaymentResponse.getPaymentId())).withSelfRel(),
-                    linkTo(methodOn(PaymentController.class).getAllExistPayments()).withRel("all active payments"));
+                    linkTo(methodOn(PaymentController.class).getAllExistPayments()).withRel("All active payments"));
         } catch (ResourceNotFoundException e) {
             e.getMessage();
         }
