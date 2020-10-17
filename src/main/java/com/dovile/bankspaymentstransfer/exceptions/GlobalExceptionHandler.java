@@ -21,16 +21,17 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    //Not found expection
+    //No resource
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ErrorDetails handleError(ResourceNotFoundException ex, WebRequest request) {
-        return new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+    public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
-
-    //Bad input exception
+    //For bad Input field
     @ExceptionHandler(BadInputException.class)
-    public ErrorDetails handleError_BadRequest(BadInputException ex, WebRequest request) {
-        return new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+    public ResponseEntity<?> handleError_BadRequest(BadInputException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     // error handle for @Valid
