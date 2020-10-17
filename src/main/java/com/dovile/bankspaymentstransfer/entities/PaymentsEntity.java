@@ -1,6 +1,5 @@
 package com.dovile.bankspaymentstransfer.entities;
 
-import com.dovile.bankspaymentstransfer.validator.AdditionalField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.Entity;
@@ -13,8 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.ManyToOne;
 import javax.persistence.CascadeType;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -26,13 +23,14 @@ import java.util.Date;
 @NamedQuery(name = "PaymentsEntity.findByStatus", query = "SELECT p FROM PaymentsEntity p WHERE p.status = :status ORDER BY p.amount")
 public class PaymentsEntity extends BaseEntity {
 
-    private BigDecimal amount;
+    private Double amount;
     @Column(name = "debtor_iban")
     private String debtorIban;
     @Column(name = "creditor_iban")
     private String creditorIban;
     @Column(name = "additional_field")
-    private String additionalField;
+    private String details;
+    private String bic_code;
     private Boolean status=true;
     @Column(name = "payment_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -51,11 +49,33 @@ public class PaymentsEntity extends BaseEntity {
     public PaymentsEntity() {
     }
 
-    public BigDecimal getAmount() {
+    public PaymentsEntity(Integer id, Double amount, String debtorIban, String creditorIban,
+                          String details, String bic_code, Boolean status, Date paymentDate,
+                          CurrencyDataEntity currencyData, PaymentTypeEntity paymentType) {
+        super(id);
+        this.amount = amount;
+        this.debtorIban = debtorIban;
+        this.creditorIban = creditorIban;
+        this.details = details;
+        this.bic_code = bic_code;
+        this.status = status;
+        this.paymentDate = paymentDate;
+        this.currencyData = currencyData;
+        this.paymentType = paymentType;
+    }
+
+    public PaymentsEntity(Integer id, Double amount, Boolean status, Date paymentDate) {
+        super(id);
+        this.amount = amount;
+        this.status = status;
+        this.paymentDate = paymentDate;
+    }
+
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -75,12 +95,20 @@ public class PaymentsEntity extends BaseEntity {
         this.creditorIban = creditorIban;
     }
 
-    public String getAdditionalField() {
-        return additionalField;
+    public String getDetails() {
+        return details;
     }
 
-    public void setAdditionalField(String additionalField) {
-        this.additionalField = additionalField;
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public String getBic_code() {
+        return bic_code;
+    }
+
+    public void setBic_code(String bic_code) {
+        this.bic_code = bic_code;
     }
 
     public Boolean getStatus() {

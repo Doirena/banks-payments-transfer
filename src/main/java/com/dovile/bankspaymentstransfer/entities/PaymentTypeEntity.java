@@ -1,7 +1,6 @@
 package com.dovile.bankspaymentstransfer.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,12 +20,18 @@ public class PaymentTypeEntity extends BaseEntity {
 
     @Column(name = "type_name")
     private String typeName;
-    private BigDecimal coefficient;
+    private Double coefficient;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentType")
     private List<PaymentsEntity> paymentsList;
 
     public PaymentTypeEntity() {
+    }
+
+    public PaymentTypeEntity(Integer id, String typeName, Double coefficient) {
+        super(id);
+        this.typeName = typeName;
+        this.coefficient = coefficient;
     }
 
     public String getTypeName() {
@@ -37,11 +42,11 @@ public class PaymentTypeEntity extends BaseEntity {
         this.typeName = typeName;
     }
 
-    public BigDecimal getCoefficient() {
+    public Double getCoefficient() {
         return coefficient;
     }
 
-    public void setCoefficient(BigDecimal coefficient) {
+    public void setCoefficient(Double coefficient) {
         this.coefficient = coefficient;
     }
 

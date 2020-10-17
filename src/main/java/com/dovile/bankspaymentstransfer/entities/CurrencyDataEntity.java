@@ -2,7 +2,6 @@ package com.dovile.bankspaymentstransfer.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,12 +19,18 @@ import javax.persistence.Table;
 public class CurrencyDataEntity extends BaseEntity {
 
     private String name;
-    private BigDecimal rate;
+    private Double rate;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "currencyData")
     private List<PaymentsEntity> paymentsList;
 
     public CurrencyDataEntity() {
+    }
+
+    public CurrencyDataEntity(Integer id, String name, Double rate) {
+        super(id);
+        this.name = name;
+        this.rate = rate;
     }
 
     public String getName() {
@@ -36,11 +41,11 @@ public class CurrencyDataEntity extends BaseEntity {
         this.name = name;
     }
 
-    public BigDecimal getRate() {
+    public Double getRate() {
         return rate;
     }
 
-    public void setRate(BigDecimal rate) {
+    public void setRate(Double rate) {
         this.rate = rate;
     }
 

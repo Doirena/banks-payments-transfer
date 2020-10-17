@@ -2,7 +2,6 @@ package com.dovile.bankspaymentstransfer.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +22,7 @@ import javax.persistence.TemporalType;
 public class CancelPaymentEntity extends BaseEntity{
 
     @Column(name = "cancel_fee")
-    private BigDecimal cancelFee;
+    private Double cancelFee;
     @Column(name = "payment_date")
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -35,20 +34,18 @@ public class CancelPaymentEntity extends BaseEntity{
     public CancelPaymentEntity() {
     }
 
-    public BigDecimal getCancelFee() {
+    public CancelPaymentEntity(Integer id, Double cancelFee, PaymentsEntity payments) {
+        super(id);
+        this.cancelFee = cancelFee;
+        this.payments = payments;
+    }
+
+    public Double getCancelFee() {
         return cancelFee;
     }
 
-    public void setCancelFee(BigDecimal cancelFee) {
+    public void setCancelFee(Double cancelFee) {
         this.cancelFee = cancelFee;
-    }
-
-    public Date getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
     }
 
     public PaymentsEntity getPayments() {
