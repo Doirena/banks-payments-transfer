@@ -1,7 +1,6 @@
 package com.dovile.bankspaymentstransfer.controller;
 
 import com.dovile.bankspaymentstransfer.assemblers.CancelPaymentAssembler;
-import com.dovile.bankspaymentstransfer.assemblers.PaymentModelAssembler;
 import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentResponse;
@@ -10,17 +9,13 @@ import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 import com.dovile.bankspaymentstransfer.assemblers.PaymentsIdModelAssembler;
 import com.dovile.bankspaymentstransfer.services.PaymentService;
+import com.dovile.bankspaymentstransfer.validator.PaymentValidation;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,40 +28,39 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 @RestController
+@RequestMapping("/payments")
 @Validated
 public class PaymentController {
 
     private final PaymentService paymentService;
     private final PaymentsIdModelAssembler paymentsAssembler;
     private final CancelPaymentAssembler cancelPaymentAssembler;
-    private final PaymentModelAssembler paymentModelAssembler;
 
-    PaymentController(PaymentService paymentService,PaymentsIdModelAssembler paymentsAssembler,
-                      CancelPaymentAssembler cancelPaymentAssembler, PaymentModelAssembler paymentModelAssembler) {
+    PaymentController(PaymentService paymentService, PaymentsIdModelAssembler paymentsAssembler,
+                      CancelPaymentAssembler cancelPaymentAssembler) {
         this.paymentService = paymentService;
         this.paymentsAssembler = paymentsAssembler;
         this.cancelPaymentAssembler = cancelPaymentAssembler;
-        this.paymentModelAssembler = paymentModelAssembler;
     }
 
-    @PostMapping(value = "/createPayment", params = {"type", "currency"})
-    public ResponseEntity<EntityModel<PaymentResponse>> createPayment(
-            @Valid @RequestBody PaymentsRequest request,
+    @PostMapping(value = "/create", params = {"type", "currency"})
+        public ResponseEntity<PaymentResponse> createPayment(
+            @Valid @RequestBody PaymentsRequest paymentsRequest,
             @RequestParam(value = "type") String type,
             @RequestParam(value = "currency") String currency) throws ResourceNotFoundException, BadInputException {
-        EntityModel<PaymentResponse> entityModel = paymentModelAssembler.toModel(
-                paymentService.createPayment(request, type, currency));
-        return ResponseEntity.ok(entityModel);
+
+        new PaymentValidation().isValidInput(paymentsRequest, type, currency);
+        return new ResponseEntity(paymentService.createPayment(paymentsRequest, type, currency), HttpStatus.OK);
     }
 
-    @PostMapping("cancelPayment/{id}")
+    @PostMapping("cancel/{id}")
     public ResponseEntity<EntityModel<CancelPaymentResponse>> cancelPayment(
-            @PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+            @PathVariable(value = "id") Integer id) throws ResourceNotFoundException, BadInputException {
         EntityModel<CancelPaymentResponse> entityModel = cancelPaymentAssembler.toModel(paymentService.cancelPayment(id));
-        return ResponseEntity.ok(entityModel);
+        return new ResponseEntity(entityModel, HttpStatus.OK);
     }
 
-    @GetMapping("payments")
+    @GetMapping
     public CollectionModel<EntityModel<PaymentsIdResponse>> getAllExistPayments() {
         List<EntityModel<PaymentsIdResponse>> employees = paymentService.getAllPaymentsId().stream()
                 .map(paymentsAssembler::toModel)
