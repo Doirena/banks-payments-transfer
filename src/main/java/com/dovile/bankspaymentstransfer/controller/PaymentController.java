@@ -8,6 +8,7 @@ import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
 import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 import com.dovile.bankspaymentstransfer.assemblers.PaymentsIdModelAssembler;
+import com.dovile.bankspaymentstransfer.services.ClientCountryService;
 import com.dovile.bankspaymentstransfer.services.PaymentService;
 import com.dovile.bankspaymentstransfer.validator.PaymentValidation;
 import org.springframework.hateoas.CollectionModel;
@@ -33,13 +34,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 public class PaymentController {
 
+    private PaymentValidation paymentValidation = new PaymentValidation();
+
     private final PaymentService paymentService;
     private final PaymentsIdModelAssembler paymentsAssembler;
     private final CancelPaymentAssembler cancelPaymentAssembler;
+    private final ClientCountryService clientCountryService;
 
-    PaymentController(PaymentService paymentService, PaymentsIdModelAssembler paymentsAssembler,
-                      CancelPaymentAssembler cancelPaymentAssembler) {
+    PaymentController(PaymentService paymentService, ClientCountryService clientCountryService,
+                      PaymentsIdModelAssembler paymentsAssembler, CancelPaymentAssembler cancelPaymentAssembler) {
         this.paymentService = paymentService;
+        this.clientCountryService=clientCountryService;
         this.paymentsAssembler = paymentsAssembler;
         this.cancelPaymentAssembler = cancelPaymentAssembler;
     }
@@ -51,9 +56,9 @@ public class PaymentController {
             @RequestParam(value = "currency") String currency, HttpServletRequest request)
             throws ResourceNotFoundException, BadInputException {
 
-        new PaymentValidation().isValidInput(paymentsRequest, type, currency);
-        String ipAddress = request.getRemoteAddr();
-        return new ResponseEntity(paymentService.createPayment(paymentsRequest, type, currency, ipAddress), HttpStatus.OK);
+        paymentValidation.isValidInput(paymentsRequest, type, currency);
+        clientCountryService.saveClientCountry(request.getRemoteAddr());
+        return new ResponseEntity(paymentService.createPayment(paymentsRequest, type, currency), HttpStatus.OK);
     }
 
     @PostMapping("cancel/{id}")
