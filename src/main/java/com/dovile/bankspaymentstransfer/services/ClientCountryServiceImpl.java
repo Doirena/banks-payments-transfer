@@ -21,6 +21,7 @@ public class ClientCountryServiceImpl implements ClientCountryService {
     @Autowired
     ClientCountryEntityRepository clientCountryEntityRepository;
 
+    //TODO for log USER IPaddress and country
     /**
      * {@inheritDoc}
      */
