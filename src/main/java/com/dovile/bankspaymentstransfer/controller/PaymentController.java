@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,10 +48,13 @@ public class PaymentController {
         public ResponseEntity<PaymentResponse> createPayment(
             @Valid @RequestBody PaymentsRequest paymentsRequest,
             @RequestParam(value = "type") String type,
-            @RequestParam(value = "currency") String currency) throws ResourceNotFoundException, BadInputException {
+            @RequestParam(value = "currency") String currency, HttpServletRequest request)
+            throws ResourceNotFoundException, BadInputException {
 
         new PaymentValidation().isValidInput(paymentsRequest, type, currency);
-        return new ResponseEntity(paymentService.createPayment(paymentsRequest, type, currency), HttpStatus.OK);
+        String ipAddres = request.getRemoteAddr();
+        System.out.println(ipAddres);
+        return new ResponseEntity(paymentService.createPayment(paymentsRequest, type, currency, ipAddres), HttpStatus.OK);
     }
 
     @PostMapping("cancel/{id}")
