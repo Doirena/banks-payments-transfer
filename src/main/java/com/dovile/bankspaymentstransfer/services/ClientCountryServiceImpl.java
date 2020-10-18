@@ -1,8 +1,8 @@
 package com.dovile.bankspaymentstransfer.services;
 
 import com.dovile.bankspaymentstransfer.entities.ClientCountryEntity;
-import com.dovile.bankspaymentstransfer.externalwebforinfo.GetInfoFromIPFactory;
-import com.dovile.bankspaymentstransfer.externalwebforinfo.InfoFromIP;
+import com.dovile.bankspaymentstransfer.externalwebgetinfo.GetInfoFromIPFactory;
+import com.dovile.bankspaymentstransfer.externalwebgetinfo.InfoFromIP;
 import com.dovile.bankspaymentstransfer.repositories.ClientCountryEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
