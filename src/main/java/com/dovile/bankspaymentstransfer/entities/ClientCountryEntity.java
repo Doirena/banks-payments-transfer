@@ -19,6 +19,12 @@ public class ClientCountryEntity extends BaseEntity{
     public ClientCountryEntity(){
     }
 
+    public ClientCountryEntity(Integer id, String ipAddress, String country) {
+        super(id);
+        this.ipAddress = ipAddress;
+        this.country = country;
+    }
+
     public String getIpAddress() {
         return ipAddress;
     }
