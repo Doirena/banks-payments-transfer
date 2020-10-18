@@ -11,7 +11,6 @@ import com.dovile.bankspaymentstransfer.entities.PaymentsEntity;
 import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 import com.dovile.bankspaymentstransfer.repositories.CancelPaymentEntityRepository;
-import com.dovile.bankspaymentstransfer.repositories.ClientCountryEntityRepository;
 import com.dovile.bankspaymentstransfer.repositories.CurrencyDataEntityRepository;
 import com.dovile.bankspaymentstransfer.repositories.PaymentTypeEntityRepository;
 import com.dovile.bankspaymentstransfer.repositories.PaymentsEntityRepository;
