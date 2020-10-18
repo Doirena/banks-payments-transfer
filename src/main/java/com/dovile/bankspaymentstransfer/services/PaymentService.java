@@ -22,9 +22,10 @@ public interface PaymentService {
      * @param paymentsRequest
      * @param type
      * @param currency
+     * @param ipAddress
      * @return new Payments
      */
-    PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddres)
+    PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddress)
             throws ResourceNotFoundException, BadInputException;
 
     /** This method create cancel payment and calculate cancel fee based on the number of hours since the payment was created.

@@ -52,9 +52,8 @@ public class PaymentController {
             throws ResourceNotFoundException, BadInputException {
 
         new PaymentValidation().isValidInput(paymentsRequest, type, currency);
-        String ipAddres = request.getRemoteAddr();
-        System.out.println(ipAddres);
-        return new ResponseEntity(paymentService.createPayment(paymentsRequest, type, currency, ipAddres), HttpStatus.OK);
+        String ipAddress = request.getRemoteAddr();
+        return new ResponseEntity(paymentService.createPayment(paymentsRequest, type, currency, ipAddress), HttpStatus.OK);
     }
 
     @PostMapping("cancel/{id}")

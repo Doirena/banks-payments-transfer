@@ -52,12 +52,12 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional
     @Override
-    public PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddres)
+    public PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddress)
             throws ResourceNotFoundException, BadInputException {
 
         //Client country from ip
-        String country = new ReadReturnCountry().getData(ipAddres);
-        ClientCountryEntity clientCountryEntity = new  ClientCountryEntity(ipAddres,country);
+        String country = new ReadReturnCountry().getData(ipAddress);
+        ClientCountryEntity clientCountryEntity = new  ClientCountryEntity(ipAddress,country);
         clientCountryEntityRepository.save(clientCountryEntity);
         logger.info("save new country");
 

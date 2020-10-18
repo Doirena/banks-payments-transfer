@@ -75,7 +75,8 @@ public class PaymentServiceImplTest {
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
                 "LT647044001231465456","payment", "KUSRLT24");
         String ipAddress = "24.48.0.1";
-        PaymentResponse expectedPayment = paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
+        PaymentResponse expectedPayment = paymentService.createPayment(paymentsRequest,
+                typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
 
         assertThat(expectedPayment).isNotNull();
         assertEquals(expectedPayment.getAmount(), paymentsEntity.getAmount());
