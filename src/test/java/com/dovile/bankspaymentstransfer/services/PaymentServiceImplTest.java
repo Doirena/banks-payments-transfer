@@ -4,16 +4,10 @@ import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
-import com.dovile.bankspaymentstransfer.entities.CancelPaymentEntity;
-import com.dovile.bankspaymentstransfer.entities.CurrencyDataEntity;
-import com.dovile.bankspaymentstransfer.entities.PaymentTypeEntity;
-import com.dovile.bankspaymentstransfer.entities.PaymentsEntity;
+import com.dovile.bankspaymentstransfer.entities.*;
 import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
-import com.dovile.bankspaymentstransfer.repositories.CancelPaymentEntityRepository;
-import com.dovile.bankspaymentstransfer.repositories.CurrencyDataEntityRepository;
-import com.dovile.bankspaymentstransfer.repositories.PaymentTypeEntityRepository;
-import com.dovile.bankspaymentstransfer.repositories.PaymentsEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +45,8 @@ public class PaymentServiceImplTest {
     private PaymentTypeEntityRepository paymentTypeEntityRepository;
     @Mock
     private CurrencyDataEntityRepository currencyDataEntityRepository;
+    @Mock
+    ClientCountryEntityRepository clientCountryEntityRepository;
 
 
     public PaymentServiceImplTest() {
@@ -69,6 +65,8 @@ public class PaymentServiceImplTest {
         PaymentsEntity paymentsEntity = new PaymentsEntity(1, (double) (20), "LT647044001231465456",
                 "LT647044001231465456","payment", "KUSRLT24", true, new Date(),
                 currencyDataEntity, typeEntity);
+        ClientCountryEntity clientCountryEntity = new ClientCountryEntity("24.48.0.1", "Canada");
+        when(clientCountryEntityRepository.save(clientCountryEntity)).thenReturn(clientCountryEntity);
         when(paymentTypeEntityRepository.findByTypeName(typeEntity.getTypeName())).thenReturn(Optional.of(typeEntity));
         when(currencyDataEntityRepository.findByName(currencyDataEntity.getName())).thenReturn(Optional.of(currencyDataEntity));
 
@@ -76,7 +74,8 @@ public class PaymentServiceImplTest {
 
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
                 "LT647044001231465456","payment", "KUSRLT24");
-        PaymentResponse expectedPayment = paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName());
+        String ipAddress = "24.48.0.1";
+        PaymentResponse expectedPayment = paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
 
         assertThat(expectedPayment).isNotNull();
         assertEquals(expectedPayment.getAmount(), paymentsEntity.getAmount());
@@ -84,30 +83,36 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void createPayment_BAD_TYPE() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_BAD_Currency() throws ResourceNotFoundException, BadInputException {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR1", (double) (1.0));
 
+        ClientCountryEntity clientCountryEntity = new ClientCountryEntity("24.48.0.1", "Canada");
+        when(clientCountryEntityRepository.save(clientCountryEntity)).thenReturn(clientCountryEntity);
         when(paymentTypeEntityRepository.findByTypeName(typeEntity.getTypeName())).thenReturn(Optional.of(typeEntity));
+
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
                 "LT647044001231465456","payment", "KUSRLT24");
-
+        String ipAddress = "24.48.0.1";
         try {
-            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName());
+            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
         } catch (BadInputException | ResourceNotFoundException e) {
             assertEquals(e.getMessage(), "Please insert a correct Currency");
         }
     }
 
     @Test
-    public void createPayment_BAD_CURRENCY() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_BAD_type() throws ResourceNotFoundException, BadInputException {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
 
+        ClientCountryEntity clientCountryEntity = new ClientCountryEntity("24.48.0.1", "Canada");
+        when(clientCountryEntityRepository.save(clientCountryEntity)).thenReturn(clientCountryEntity);
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
                 "LT647044001231465456","payment", "KUSRLT24");
+        String ipAddress = "24.48.0.1";
         try {
-            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName());
+            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
         } catch (BadInputException | ResourceNotFoundException e) {
             assertEquals(e.getMessage(), "Please insert a correct Type");
         }
