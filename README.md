@@ -1,4 +1,4 @@
-# Banks payments transfer
+# Bank payment transfer
 This project is RESTful web service for payments processing.
 Client is able to create a payment in USD or EUR curriencies with possibility to cancel it with small cancelation fee in current day.
 There are three types of payments client can choose from. Cancelation fee is calculated by payment type rate.
