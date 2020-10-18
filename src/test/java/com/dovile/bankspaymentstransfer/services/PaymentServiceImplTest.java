@@ -4,16 +4,22 @@ import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
-import com.dovile.bankspaymentstransfer.entities.*;
+import com.dovile.bankspaymentstransfer.entities.CancelPaymentEntity;
+import com.dovile.bankspaymentstransfer.entities.CurrencyDataEntity;
+import com.dovile.bankspaymentstransfer.entities.PaymentTypeEntity;
+import com.dovile.bankspaymentstransfer.entities.PaymentsEntity;
 import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
-import com.dovile.bankspaymentstransfer.repositories.*;
+import com.dovile.bankspaymentstransfer.repositories.CancelPaymentEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.ClientCountryEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.CurrencyDataEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.PaymentTypeEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.PaymentsEntityRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
@@ -24,11 +30,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -45,9 +54,6 @@ public class PaymentServiceImplTest {
     private PaymentTypeEntityRepository paymentTypeEntityRepository;
     @Mock
     private CurrencyDataEntityRepository currencyDataEntityRepository;
-    @Mock
-    ClientCountryEntityRepository clientCountryEntityRepository;
-
 
     public PaymentServiceImplTest() {
     }
@@ -58,25 +64,22 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void createPayment() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_OK() throws ResourceNotFoundException, BadInputException {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
-
         PaymentsEntity paymentsEntity = new PaymentsEntity(1, (double) (20), "LT647044001231465456",
-                "LT647044001231465456","payment", "KUSRLT24", true, new Date(),
+                "LT647044001231465456", "payment", "KUSRLT24", true, new Date(),
                 currencyDataEntity, typeEntity);
-        ClientCountryEntity clientCountryEntity = new ClientCountryEntity("24.48.0.1", "Canada");
-        when(clientCountryEntityRepository.save(clientCountryEntity)).thenReturn(clientCountryEntity);
+        PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
+                "LT647044001231465456", "payment", "KUSRLT24");
+
         when(paymentTypeEntityRepository.findByTypeName(typeEntity.getTypeName())).thenReturn(Optional.of(typeEntity));
         when(currencyDataEntityRepository.findByName(currencyDataEntity.getName())).thenReturn(Optional.of(currencyDataEntity));
 
         given(paymentsEntityRepository.save(paymentsEntity)).willAnswer(invocation -> invocation.getArgument(1));
 
-        PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
-                "LT647044001231465456","payment", "KUSRLT24");
-        String ipAddress = "24.48.0.1";
         PaymentResponse expectedPayment = paymentService.createPayment(paymentsRequest,
-                typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
+                typeEntity.getTypeName(), currencyDataEntity.getName());
 
         assertThat(expectedPayment).isNotNull();
         assertEquals(expectedPayment.getAmount(), paymentsEntity.getAmount());
@@ -84,36 +87,30 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void createPayment_BAD_Currency() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_should_Exception_when_CurrencyBad() throws ResourceNotFoundException, BadInputException {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR1", (double) (1.0));
+        PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
+                "LT647044001231465456", "payment", "KUSRLT24");
 
-        ClientCountryEntity clientCountryEntity = new ClientCountryEntity("24.48.0.1", "Canada");
-        when(clientCountryEntityRepository.save(clientCountryEntity)).thenReturn(clientCountryEntity);
         when(paymentTypeEntityRepository.findByTypeName(typeEntity.getTypeName())).thenReturn(Optional.of(typeEntity));
 
-        PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
-                "LT647044001231465456","payment", "KUSRLT24");
-        String ipAddress = "24.48.0.1";
         try {
-            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
+            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName());
         } catch (BadInputException | ResourceNotFoundException e) {
             assertEquals(e.getMessage(), "Please insert a correct Currency");
         }
     }
 
     @Test
-    public void createPayment_BAD_type() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_should_Exception_when_typeBad() throws ResourceNotFoundException, BadInputException {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
-
-        ClientCountryEntity clientCountryEntity = new ClientCountryEntity("24.48.0.1", "Canada");
-        when(clientCountryEntityRepository.save(clientCountryEntity)).thenReturn(clientCountryEntity);
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
-                "LT647044001231465456","payment", "KUSRLT24");
-        String ipAddress = "24.48.0.1";
+                "LT647044001231465456", "payment", "KUSRLT24");
+
         try {
-            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName(), ipAddress);
+            paymentService.createPayment(paymentsRequest, typeEntity.getTypeName(), currencyDataEntity.getName());
         } catch (BadInputException | ResourceNotFoundException e) {
             assertEquals(e.getMessage(), "Please insert a correct Type");
         }
@@ -127,7 +124,7 @@ public class PaymentServiceImplTest {
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
 
         PaymentsEntity paymentsEntity = new PaymentsEntity(1, (double) (20), "LT647044001231465456",
-                "LT647044001231465456","payment", "KUSRLT24", true, new Date(),
+                "LT647044001231465456", "payment", "KUSRLT24", true, new Date(),
                 currencyDataEntity, typeEntity);
         CancelPaymentEntity cancelPaymentEntity = new CancelPaymentEntity(null, (double) 0.0, paymentsEntity);
 
@@ -142,16 +139,16 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void cancelPayment_BadInput_Payment_Time_Off() throws ParseException {
+    public void cancelPayment_should_Exception_when_TimeOff() throws ParseException {
         Integer paymentId = 1;
         String dt = "2020-10-15";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date paymentDate=sdf.parse(dt);
+        Date paymentDate = sdf.parse(dt);
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(paymentId, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
 
         PaymentsEntity paymentsEntity = new PaymentsEntity(1, (double) (20), "LT647044001231465456",
-                "LT647044001231465456","payment", "KUSRLT24", true, paymentDate,
+                "LT647044001231465456", "payment", "KUSRLT24", true, paymentDate,
                 currencyDataEntity, typeEntity);
 
         when(paymentsEntityRepository.findById(paymentId)).thenReturn(Optional.of(paymentsEntity));
@@ -163,13 +160,13 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void cancelPayment_Payment_Was_Cenceled_Before() throws ParseException {
+    public void cancelPayment_should_Exception_when_PaymentStatus_False() throws ParseException {
         Integer paymentId = 1;
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(paymentId, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
 
         PaymentsEntity paymentsEntity = new PaymentsEntity(1, (double) (20), "LT647044001231465456",
-                "LT647044001231465456","payment", "KUSRLT24", false, new Date(),
+                "LT647044001231465456", "payment", "KUSRLT24", false, new Date(),
                 currencyDataEntity, typeEntity);
 
         when(paymentsEntityRepository.findById(paymentId)).thenReturn(Optional.of(paymentsEntity));
@@ -181,7 +178,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void cancelPayment_when_PaymentID_not_Found() {
+    public void cancelPayment_should_Exception_when_PaymentID_NotFound() {
         Integer paymentId = 1;
         try {
             paymentService.cancelPayment(paymentId);
@@ -191,7 +188,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void getAllPaymentsId() {
+    public void getAllPaymentsId_OK() {
         List<PaymentsEntity> paymentsEList = new ArrayList();
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
@@ -210,7 +207,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void getCancelPaymentById() throws ResourceNotFoundException {
+    public void getCancelPaymentById_OK() throws ResourceNotFoundException {
         Integer paymentId = 1;
 
         PaymentsEntity paymentsEntity = new PaymentsEntity(paymentId, (double) 200, false, new Date());
@@ -224,7 +221,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void getCancelError_when_PaymentID_notExist() {
+    public void getCancel_should_Exception_when_PaymentID_notExist() {
         Integer paymentId = 1;
         try {
             paymentService.getCancelPaymentById(paymentId);
