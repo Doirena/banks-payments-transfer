@@ -1,18 +1,22 @@
 package com.dovile.bankspaymentstransfer.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+/**
+ *
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 @Entity
 @Table(name = "client_country")
+@NamedQuery(name = "ClientCountryEntity.findByipAddress", query = "SELECT c FROM ClientCountryEntity c WHERE c.ipAddress = :ipAddress")
 public class ClientCountryEntity extends BaseEntity{
 
     private String ipAddress;
-    private String ccountry;
+    private String country;
 
-    public ClientCountryEntity(String ipAddress, String ccountry) {
-        this.ipAddress = ipAddress;
-        this.ccountry = ccountry;
+    public ClientCountryEntity(){
     }
 
     public String getIpAddress() {
@@ -23,11 +27,11 @@ public class ClientCountryEntity extends BaseEntity{
         this.ipAddress = ipAddress;
     }
 
-    public String getCcountry() {
-        return ccountry;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCcountry(String ccountry) {
-        this.ccountry = ccountry;
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
