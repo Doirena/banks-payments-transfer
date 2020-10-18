@@ -1,6 +1,7 @@
 package com.dovile.bankspaymentstransfer.domain.response;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class PaymentResponse extends PaymentsIdResponse {
