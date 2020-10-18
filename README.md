@@ -9,9 +9,9 @@ Client IP and location are stored in database. But it's not used in business log
 ## Running application
 H2 in-memory database is used in this project. Data compilated from data.sql. 
 ### Compile and run application:
-If POSTMAN is used: <i>createPayment method</i>
+<i>createPayment method</i>:
 http://localhost:8080/payments/create?type=TYPE1&currency=EUR
-
+![project](https://user-images.githubusercontent.com/56863735/96388677-1ab7bf80-11b3-11eb-98e1-68b88c0dbc8b.png)
 ### Used dependencies:
 - spring-boot-starter-data-jpa
 - spring-boot-starter-hateoas
