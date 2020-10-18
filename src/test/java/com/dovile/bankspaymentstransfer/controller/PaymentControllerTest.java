@@ -24,11 +24,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Date;
-import static org.mockito.Mockito.*;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 @RunWith(SpringRunner.class)
@@ -62,7 +64,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Bad_Type_NOT_FOUND() throws Exception {
+    public void createPayment_when_bad_type_should_not_found() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE5", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -75,11 +77,11 @@ public class PaymentControllerTest {
                 .content(om.writeValueAsString(paymentsRequest))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(content().json("{'message':'Type is Invalid'}"));
+                .andExpect(content().json("{'message':'Type is invalid'}"));
     }
 
     @Test
-    public void createPayment_Bad_currency_BAD_INPUT() throws Exception {
+    public void createPayment_when_bad_currency_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR111", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -96,7 +98,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Bad_currency_By_Type_BAD_INPUT() throws Exception {
+    public void createPayment_when_bad_currency_for_type_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE2", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -113,7 +115,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Type1_Empty_Details_BAD_INPUT() throws Exception {
+    public void createPayment_when_type1_empty_details_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -130,7 +132,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Type3_Empty_BICcode_BAD_INPUT() throws Exception {
+    public void createPayment_when_type3_empty_bic_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE3", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -147,7 +149,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Deb_IBAN_BAD_INPUT() throws Exception {
+    public void createPayment_when_deb_iban_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE3", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT6470440012314654561",
@@ -164,7 +166,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Cred_IBAN_BAD_INPUT() throws Exception {
+    public void createPayment_when_cred_iban_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE3", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -181,7 +183,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Amount_String_BAD_INPUT() throws Exception {
+    public void createPayment_when_amount_string_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE3", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("HELLO", "LT647044001231465456",
@@ -198,7 +200,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Amount_Negative_BAD_INPUT() throws Exception {
+    public void createPayment_when_amount_negative_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE3", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("-20", "LT647044001231465456",
@@ -215,7 +217,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment_Amount_Number_After_Dot_BAD_INPUT() throws Exception {
+    public void createPayment_when_amount_number_after_dot_should_bad_request() throws Exception {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE3", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("1.0009", "LT647044001231465456",
@@ -232,7 +234,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void getCancelPaymentById() throws Exception {
+    public void getCancelPaymentById_OK() throws Exception {
 
         PaymentsEntity paymentsEntity = new PaymentsEntity(1, (double) 200, false, new Date());
         CancelPaymentEntity cancelE = new CancelPaymentEntity(null, (double) 20, paymentsEntity);

@@ -87,7 +87,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void createPayment_should_Exception_when_CurrencyBad() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_should_exception_when_currencyBad() throws ResourceNotFoundException, BadInputException {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR1", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -103,7 +103,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void createPayment_should_Exception_when_typeBad() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_should_exception_when_typeBad() throws ResourceNotFoundException, BadInputException {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -139,7 +139,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void cancelPayment_should_Exception_when_TimeOff() throws ParseException {
+    public void cancelPayment_should_exception_when_timeOff() throws ParseException {
         Integer paymentId = 1;
         String dt = "2020-10-15";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -160,7 +160,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void cancelPayment_should_Exception_when_PaymentStatus_False() throws ParseException {
+    public void cancelPayment_should_exception_when_paymentStatus_false() throws ParseException {
         Integer paymentId = 1;
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(paymentId, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR", (double) (1.0));
@@ -178,7 +178,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void cancelPayment_should_Exception_when_PaymentID_NotFound() {
+    public void cancelPayment_should_exception_when_paymentID_notFound() {
         Integer paymentId = 1;
         try {
             paymentService.cancelPayment(paymentId);
@@ -221,7 +221,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void getCancel_should_Exception_when_PaymentID_notExist() {
+    public void getCancel_should_exception_when_PaymentID_notExist() {
         Integer paymentId = 1;
         try {
             paymentService.getCancelPaymentById(paymentId);
