@@ -13,9 +13,7 @@ import static com.dovile.bankspaymentstransfer.validator.TypeEnum.valueOf;
  */
 public class PaymentValidation {
     /**
-     * to distribute by
-     * used switch to helps call separate validation classes methods per types to check the fields
-     *
+     * This method let to distribute validation by types with appropriate validation rules.
      * @param paymentsRequest
      * @param type            which clients chose
      * @param currency        which clients chose
