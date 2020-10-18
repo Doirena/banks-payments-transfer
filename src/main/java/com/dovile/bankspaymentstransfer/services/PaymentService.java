@@ -10,6 +10,7 @@ import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 import java.util.List;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public interface PaymentService {
@@ -22,10 +23,11 @@ public interface PaymentService {
      * @param paymentsRequest
      * @param type
      * @param currency
-     * @param ipAddress
-     * @return new Payments
+     * @return new Payment
+     * @throws ResourceNotFoundException
+     * @throws BadInputException
      */
-    PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddress)
+    PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency)
             throws ResourceNotFoundException, BadInputException;
 
     /** This method create cancel payment and calculate cancel fee based on the number of hours since the payment was created.
@@ -33,6 +35,7 @@ public interface PaymentService {
      * @param paymentId
      * @return cancel Payment
      * @throws ResourceNotFoundException
+     * @throws BadInputException
      */
     CancelPaymentResponse cancelPayment(Integer paymentId) throws ResourceNotFoundException, BadInputException;
 

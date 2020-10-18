@@ -1,26 +1,32 @@
 package com.dovile.bankspaymentstransfer.services;
 
-import com.dovile.bankspaymentstransfer.findclientcountry.ReadReturnCountry;
 import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
-import com.dovile.bankspaymentstransfer.entities.*;
+import com.dovile.bankspaymentstransfer.entities.CurrencyDataEntity;
+import com.dovile.bankspaymentstransfer.entities.PaymentTypeEntity;
+import com.dovile.bankspaymentstransfer.entities.CancelPaymentEntity;
+import com.dovile.bankspaymentstransfer.entities.PaymentsEntity;
 import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
-import com.dovile.bankspaymentstransfer.repositories.*;
+import com.dovile.bankspaymentstransfer.repositories.CurrencyDataEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.PaymentTypeEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.PaymentsEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.CancelPaymentEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 @Service
@@ -28,7 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final static Logger logger = Logger.getLogger(PaymentServiceImpl.class.getName());
 
-    private final long HOURS = 60 * 60 * 1000;
+    private final long ONE_HOUR = 60 * 60 * 1000;
 
     @Autowired
     PaymentsEntityRepository paymentsEntityRepository;
@@ -38,28 +44,13 @@ public class PaymentServiceImpl implements PaymentService {
     CurrencyDataEntityRepository currencyDataEntityRepository;
     @Autowired
     CancelPaymentEntityRepository cancelPaymentEntityRepository;
-    @Autowired
-    ClientCountryEntityRepository clientCountryEntityRepository;
 
     /**
-     *
-     * @param paymentsRequest
-     * @param type
-     * @param currency
-     * @return new payment
-     * @throws ResourceNotFoundException
-     * @throws BadInputException
+     * {@inheritDoc}
      */
-    @Transactional
     @Override
-    public PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddress)
+    public PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency)
             throws ResourceNotFoundException, BadInputException {
-
-        //Client country from ip
-        String country = new ReadReturnCountry().getData(ipAddress);
-        ClientCountryEntity clientCountryEntity = new  ClientCountryEntity(ipAddress,country);
-        clientCountryEntityRepository.save(clientCountryEntity);
-        logger.info("save new country");
 
         type = type.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
         currency = currency.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
@@ -87,11 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     /**
-     *
-     * @param paymentId
-     * @return new Canceled payment with canceled fee.
-     * @throws ResourceNotFoundException
-     * @throws BadInputException
+     * {@inheritDoc}
      */
     @Transactional
     @Override
@@ -123,23 +110,18 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     /**
-     *
-     * @return list of active payments. Returns just payment id.
+     * {@inheritDoc}
      */
     @Override
     public List<PaymentsIdResponse> getAllPaymentsId() {
-        List<PaymentsIdResponse> paymentsIdResponseList = new ArrayList<>();
-        for (PaymentsEntity p : paymentsEntityRepository.findByStatus(true)) {
-            paymentsIdResponseList.add(new PaymentsIdResponse(p.getId()));
-        }
+        List<PaymentsIdResponse> paymentsIdResponseList = paymentsEntityRepository.findByStatus(true).stream()
+                .map(i->new PaymentsIdResponse(i.getId()))
+                .collect(Collectors.toList());
         return paymentsIdResponseList;
     }
 
     /**
-     *
-     * @param paymentId
-     * @return canceled payment by payments id. Returns value: payments id and canceled fee
-     * @throws ResourceNotFoundException
+     * {@inheritDoc}
      */
     @Override
     public CancelPaymentResponse getCancelPaymentById(Integer paymentId) throws ResourceNotFoundException {
@@ -157,8 +139,8 @@ public class PaymentServiceImpl implements PaymentService {
      * h is hours, which get calculate diff between payment create time and real time.
      */
     private Double calcCancelFee(Date paymentDate, Double coefficient){
-        long diff = (new Date().getTime() - paymentDate.getTime()) / HOURS % 24;
-        Double fee = (double)(diff)*coefficient;
+        Long diff = (new Date().getTime() - paymentDate.getTime()) / ONE_HOUR % 24;
+        Double fee = (diff.doubleValue())*coefficient;
         return fee;
     }
 }
