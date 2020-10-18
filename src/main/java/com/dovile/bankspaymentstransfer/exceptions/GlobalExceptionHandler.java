@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 @RestControllerAdvice

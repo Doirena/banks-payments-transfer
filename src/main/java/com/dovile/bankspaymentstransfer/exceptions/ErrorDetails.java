@@ -3,6 +3,7 @@ package com.dovile.bankspaymentstransfer.exceptions;
 import java.util.Date;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class ErrorDetails {
