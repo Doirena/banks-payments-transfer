@@ -13,13 +13,13 @@ import static com.dovile.bankspaymentstransfer.validator.TypeEnum.TYPE3;
  */
 public class PaymentTypeThree implements PaymentTypeStrategy {
     /**
-     * Types have enum {@link TypeEnum}. Type 3 have EUR and USD currencies.
-     * Also Type 3 is mandatory bic codes, so this method call {@link CheckBicCode} class method isBICCodeValid
-     * and check is valid correct, returns true, if no returns false.
-     * This method call {@link BasePaymentValidFields} class and valid other three fields.
+     * Types have enum {@link TypeEnum}. Type 3 can have only EUR and USD currencies.
+     * Also Type 3 is mandatory for bic code. This method calls {@link CheckBicCode} class method isBICCodeValid
+     * and checks if it's valid. Returns true or false.
+     * This method calls {@link BasePaymentValidFields} class and validates other three fields.
      * @param paymentsRequest
-     * @param currency        currency from request, which clients chosed
-     * @return if valid is ok, return true.
+     * @param currency
+     * @return if valid returns true.
      * @throws BadInputException
      * @throws ResourceNotFoundException
      */

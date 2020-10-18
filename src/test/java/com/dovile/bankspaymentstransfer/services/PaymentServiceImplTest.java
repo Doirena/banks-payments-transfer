@@ -87,7 +87,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void createPayment_should_exception_when_currencyBad() throws ResourceNotFoundException, BadInputException {
+    public void createPayment_should_exception_when_currencyBad() {
         PaymentTypeEntity typeEntity = new PaymentTypeEntity(1, "TYPE1", (double) (0.005));
         CurrencyDataEntity currencyDataEntity = new CurrencyDataEntity(1, "EUR1", (double) (1.0));
         PaymentsRequest paymentsRequest = new PaymentsRequest("20", "LT647044001231465456",
@@ -155,7 +155,7 @@ public class PaymentServiceImplTest {
         try {
             paymentService.cancelPayment(paymentId);
         } catch (BadInputException | ResourceNotFoundException e) {
-            assertEquals(e.getMessage(), "You can't cancel the payment time is off");
+            assertEquals(e.getMessage(), "The payment can't be canceled. Date expired");
         }
     }
 
@@ -173,7 +173,7 @@ public class PaymentServiceImplTest {
         try {
             paymentService.cancelPayment(paymentId);
         } catch (BadInputException | ResourceNotFoundException e) {
-            assertEquals(e.getMessage(), "You can't cancel the payment is canceleted");
+            assertEquals(e.getMessage(), "The payment is already canceled");
         }
     }
 
@@ -226,7 +226,7 @@ public class PaymentServiceImplTest {
         try {
             paymentService.getCancelPaymentById(paymentId);
         } catch (ResourceNotFoundException e) {
-            assertEquals(e.getMessage(), "There isn't cancel this payment");
+            assertEquals(e.getMessage(), "This payment isn't canceled");
         }
     }
 }

@@ -10,9 +10,13 @@ import com.dovile.bankspaymentstransfer.validator.checkiban_biccodes.CheckIbanVa
  */
 public class BasePaymentValidFields {
     /**
-     * This methods call one class'es method {@link CheckIbanValidation} for credit and debit ibans validation.
-     * Also checks request amount, which clients send to db.
-     * Amount validation works: 1 check it is not null, 2 checks type, 3 amount shoud be possitve, 4 and number after dot, should be 2
+     * This method calls another class'es method {@link CheckIbanValidation} for credit and debit ibans validation.
+     * Also checks requested amount.
+     * Amount validation:
+     * 1 checks if it is not null.
+     * 2 checks double type if it is correct.
+     * 3 amount should be possitive.
+     * 4 check number after dot (should be two digits).
      * @param paymentsRequest
      * @return true, if validation is correct.
      * @throws ResourceNotFoundException
@@ -32,14 +36,14 @@ public class BasePaymentValidFields {
     private boolean isValidAmount(String amount) throws BadInputException, ResourceNotFoundException {
         //Check it is empty
         if (amount == null) {
-            throw new ResourceNotFoundException("Please fill in amount field");
+            throw new ResourceNotFoundException("Please fill in the amount field");
         }
         //Check Type, should be digits
         Double newAmount;
         try {
             newAmount = Double.parseDouble(amount);
         } catch (Exception e) {
-            throw new BadInputException("Bad amount type, should be just number");
+            throw new BadInputException("Bad amount type, should be just a number");
         }
         //Amount not less than 0.01
         if (newAmount < 0.01) {
@@ -47,7 +51,7 @@ public class BasePaymentValidFields {
         }
         //Check amount length after dot should be two numbers:
         if (amount.substring(amount.indexOf('.') + 1).length() > 2) {
-            throw new BadInputException("Bad amount, after dot should be two numbers");
+            throw new BadInputException("Bad amount, after dot should be two digits");
         }
         return true;
     }

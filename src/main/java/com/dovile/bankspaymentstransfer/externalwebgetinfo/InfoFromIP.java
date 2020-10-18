@@ -13,7 +13,7 @@ public abstract class InfoFromIP {
     abstract InputStream getUrl(String url, String ipAddress);
 
     /**
-     * @return just new hashMap, but it can be override and change value
+     * @return just a string, which has country name by ip address
      */
     public abstract String getCountry(String ipAddress);
 }

@@ -3,13 +3,14 @@ package com.dovile.bankspaymentstransfer.domain.request;
 import javax.validation.constraints.NotEmpty;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class PaymentsRequest {
     private String amount;
-    @NotEmpty(message = "Please fill in debtorIban field")
+    @NotEmpty(message = "Please fill in the debtorIban field")
     private String debtorIban;
-    @NotEmpty(message = "Please fill in creditorIban field")
+    @NotEmpty(message = "Please fill in the creditorIban field")
     private String creditorIban;
     private String details;
     private String bic_code;

@@ -196,7 +196,7 @@ public class PaymentControllerTest {
                 .content(om.writeValueAsString(paymentsRequest))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(content().json("{'message':'Bad amount type, should be just number'}"));
+                .andExpect(content().json("{'message':'Bad amount type, should be just a number'}"));
     }
 
     @Test
@@ -230,7 +230,7 @@ public class PaymentControllerTest {
                 .content(om.writeValueAsString(paymentsRequest))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(content().json("{'message':'Bad amount, after dot should be two numbers'}"));
+                .andExpect(content().json("{'message':'Bad amount, after dot should be two digits'}"));
     }
 
     @Test

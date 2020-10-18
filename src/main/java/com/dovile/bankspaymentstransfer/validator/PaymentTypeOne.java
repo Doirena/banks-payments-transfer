@@ -13,12 +13,12 @@ import static com.dovile.bankspaymentstransfer.validator.TypeEnum.TYPE1;
 public class PaymentTypeOne implements PaymentTypeStrategy {
 
     /**
-     * Types have enum {@link TypeEnum}. Type 1 have just EUR currency, this method valid it.
-     * Also by rules, Type1 should have details field, so this method checks it.
-     * This method call {@link BasePaymentValidFields} class and valid other three fields.
+     * Types have enum {@link TypeEnum}. Type 1 can only have EUR currency, this method valids it.
+     * Also by rules, Type1 should have details field and this method checks it.
+     * This method calls {@link BasePaymentValidFields} class and validates other three fields.
      * @param paymentsRequest
-     * @param currency from request, which clients chosed
-     * @return if valid is ok, return true.
+     * @param currency
+     * @return if valid is ok, returns true
      * @throws BadInputException
      * @throws ResourceNotFoundException
      */

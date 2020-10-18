@@ -34,9 +34,9 @@ public class ClientCountryServiceImpl implements ClientCountryService {
             clientCountryEntity.setIpAddress(ipAddress);
             clientCountryEntity.setCountry(country);
             clientCountryEntityRepository.save(clientCountryEntity);
-            logger.info("save new ip address and country");
+            logger.info("Add new ip address and country");
         } else {
-            logger.info("ip address exist");
+            logger.info("Ip address already exists");
             return;
         }
     }

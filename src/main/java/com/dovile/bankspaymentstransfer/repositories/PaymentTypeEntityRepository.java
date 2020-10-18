@@ -14,7 +14,6 @@ import java.util.Optional;
  */
 @Repository
 public interface PaymentTypeEntityRepository extends JpaRepository<PaymentTypeEntity, Integer> {
-
     @Query(name = "PaymentTypeEntity.findByTypeName")
     Optional<PaymentTypeEntity> findByTypeName(@Param("type") String type);
 }

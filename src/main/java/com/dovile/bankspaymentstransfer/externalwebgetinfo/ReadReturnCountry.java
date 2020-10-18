@@ -12,7 +12,6 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class ReadReturnCountry extends InfoFromIP {
@@ -29,7 +28,7 @@ public class ReadReturnCountry extends InfoFromIP {
     InputStream getUrl(String url, String ipAddress) {
         URL obj = null;
         try {
-            obj = new URL(url +ipAddress);
+            obj = new URL(url + ipAddress);
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
             connection.addRequestProperty("User-Agent", "Mozilla/4.76");
             connection.setRequestMethod("GET");
@@ -45,24 +44,24 @@ public class ReadReturnCountry extends InfoFromIP {
     /**
      * @return data from xml file, where will be type and rate
      */
-   public String getCountry (String ipAddress) {
+    public String getCountry(String ipAddress) {
         String countryName = null;
 
-        logger.info("Connetion for the parse data");
+        logger.info("Connection for the parse data");
         InputStream is = getUrl(url, ipAddress);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-       DocumentBuilder db = null;
-       try {
-           db = dbf.newDocumentBuilder();
-           Document doc = db.parse(is);
-           NodeList errNodes = doc.getElementsByTagName(country);
-           for (int i = 0; i < errNodes.getLength(); i++) {
-               Element err = (Element) errNodes.item(i);
-               countryName = err.getTextContent();
-           }
-       } catch (Exception e) {
-           logger.severe("Problem with connetion, problem to parse data!" + e.getMessage());
-       }
+        DocumentBuilder db = null;
+        try {
+            db = dbf.newDocumentBuilder();
+            Document doc = db.parse(is);
+            NodeList errNodes = doc.getElementsByTagName(country);
+            for (int i = 0; i < errNodes.getLength(); i++) {
+                Element err = (Element) errNodes.item(i);
+                countryName = err.getTextContent();
+            }
+        } catch (Exception e) {
+            logger.severe("Problem with connection. Data not found " + e.getMessage());
+        }
         return countryName;
     }
 }

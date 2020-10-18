@@ -16,11 +16,11 @@ public class CheckIbanValidation {
     private final int IBANNUMBER_MIN_SIZE = 15;
     private final int IBANNUMBER_MAX_SIZE = 34;
 
-    //Return true or false of IBAN
+    //Returns true or false of IBAN validation
     public boolean isIBANValid(String iban) {
         if (iban != null) {
             iban = iban.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
-            if (checkIbanLenght(iban)) {
+            if (checkIbanLength(iban)) {
                 BigInteger integerValue = stringConvertToInteger(iban);
                 return integerValue.mod(BIG_INTEGER_97).intValue() == EXPECTED_MOD_97;
             }
@@ -28,14 +28,14 @@ public class CheckIbanValidation {
         return false;
     }
 
-    //1. Construct new IBAN no, Country code and chars move to the end
-    //2. Return new IBAN for BigInteger type
+    //1. Construct new IBAN number, Country code and moves chars to the end
+    //2. Returns new IBAN for BigInteger type
     private BigInteger stringConvertToInteger(String iban) {
         String newIban = iban.substring(4) + iban.substring(0, 4);
         return new BigInteger(replaceCountryCharactersWithDigits(newIban));
     }
 
-    //Make IBAN no full digits
+    //Makes full digits IBAN number
     private String replaceCountryCharactersWithDigits(String iban) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < iban.length(); i++) {
@@ -44,8 +44,8 @@ public class CheckIbanValidation {
         return sb.toString();
     }
 
-    //Check IBAN lenght if its correct by some criteria
-    private boolean checkIbanLenght(String iban) {
+    //Check IBAN length if its correct by some criteria
+    private boolean checkIbanLength(String iban) {
         Map<String, Integer> CountryCodeDigitSum = new HashMap<>();
 
         for (String countryChars : new Countrychars().getCOUNTRY_CHARS()) {

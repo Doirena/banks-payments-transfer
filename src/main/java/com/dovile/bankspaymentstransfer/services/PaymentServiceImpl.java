@@ -88,12 +88,12 @@ public class PaymentServiceImpl implements PaymentService {
 
         //If state is false
         if (!paymentsEntity.getStatus()) {
-            throw new BadInputException("You can't cancel the payment is canceleted");
+            throw new BadInputException("The payment is already canceled");
         }
         //first check time
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         if (format.format(paymentsEntity.getPaymentDate()).compareTo(format.format(new Date())) < 0) {
-            throw new BadInputException("You can't cancel the payment time is off");
+            throw new BadInputException("The payment can't be canceled. Date expired");
         }
 
         CancelPaymentEntity cancelPaymentEntity = new CancelPaymentEntity();
@@ -126,7 +126,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public CancelPaymentResponse getCancelPaymentById(Integer paymentId) throws ResourceNotFoundException {
         CancelPaymentEntity c = cancelPaymentEntityRepository.findPaymentID(paymentId).
-                orElseThrow(() -> new ResourceNotFoundException("There isn't cancel this payment"));
+                orElseThrow(() -> new ResourceNotFoundException("This payment isn't canceled"));
         return new CancelPaymentResponse(c.getPayments().getId(), c.getCancelFee());
     }
 
@@ -134,9 +134,9 @@ public class PaymentServiceImpl implements PaymentService {
      *
      * @param paymentDate
      * @param coefficient
-     * @return Cancel payment fee, which is get by formula: h*k
+     * @return Cancelation fee, which is get by formula: h*k
      * k is coefficient, which we get from Payment Type table. It is by default according to each type;
-     * h is hours, which get calculate diff between payment create time and real time.
+     * h is hours, which we get by calculating the difference between payment creation time and real time.
      */
     private Double calcCancelFee(Date paymentDate, Double coefficient){
         Long diff = (new Date().getTime() - paymentDate.getTime()) / ONE_HOUR % 24;

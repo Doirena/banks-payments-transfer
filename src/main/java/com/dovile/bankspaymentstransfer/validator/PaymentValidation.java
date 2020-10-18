@@ -14,10 +14,10 @@ import static com.dovile.bankspaymentstransfer.validator.TypeEnum.valueOf;
  */
 public class PaymentValidation {
     /**
-     * This method let to distribute validation by types with appropriate validation rules.
+     * This method lets to distribute validation by types with appropriate validation rules.
      * @param paymentsRequest
-     * @param type            which clients chose
-     * @param currency        which clients chose
+     * @param type
+     * @param currency
      * @throws BadInputException
      * @throws ResourceNotFoundException
      */
