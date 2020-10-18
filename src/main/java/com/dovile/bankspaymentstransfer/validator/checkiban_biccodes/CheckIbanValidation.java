@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class CheckIbanValidation {
