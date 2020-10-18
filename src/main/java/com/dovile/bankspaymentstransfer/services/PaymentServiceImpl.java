@@ -1,19 +1,14 @@
 package com.dovile.bankspaymentstransfer.services;
 
+import com.dovile.bankspaymentstransfer.findclientcountry.ReadReturnCountry;
 import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.domain.response.CancelPaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentResponse;
 import com.dovile.bankspaymentstransfer.domain.response.PaymentsIdResponse;
-import com.dovile.bankspaymentstransfer.entities.CancelPaymentEntity;
-import com.dovile.bankspaymentstransfer.entities.CurrencyDataEntity;
-import com.dovile.bankspaymentstransfer.entities.PaymentTypeEntity;
-import com.dovile.bankspaymentstransfer.entities.PaymentsEntity;
+import com.dovile.bankspaymentstransfer.entities.*;
 import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
-import com.dovile.bankspaymentstransfer.repositories.CancelPaymentEntityRepository;
-import com.dovile.bankspaymentstransfer.repositories.CurrencyDataEntityRepository;
-import com.dovile.bankspaymentstransfer.repositories.PaymentTypeEntityRepository;
-import com.dovile.bankspaymentstransfer.repositories.PaymentsEntityRepository;
+import com.dovile.bankspaymentstransfer.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,15 +32,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     PaymentsEntityRepository paymentsEntityRepository;
-
     @Autowired
     PaymentTypeEntityRepository paymentTypeEntityRepository;
-
     @Autowired
     CurrencyDataEntityRepository currencyDataEntityRepository;
-
     @Autowired
     CancelPaymentEntityRepository cancelPaymentEntityRepository;
+    @Autowired
+    ClientCountryEntityRepository clientCountryEntityRepository;
 
     /**
      *
@@ -56,9 +50,17 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws ResourceNotFoundException
      * @throws BadInputException
      */
+    @Transactional
     @Override
-    public PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency)
+    public PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddres)
             throws ResourceNotFoundException, BadInputException {
+
+        //Client country from ip
+        String country = new ReadReturnCountry().getData(ipAddres);
+        ClientCountryEntity clientCountryEntity = new  ClientCountryEntity(ipAddres,country);
+        clientCountryEntityRepository.save(clientCountryEntity);
+        logger.info("save new country");
+
         type = type.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
         currency = currency.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
         PaymentsEntity paymentsEntity = new PaymentsEntity();

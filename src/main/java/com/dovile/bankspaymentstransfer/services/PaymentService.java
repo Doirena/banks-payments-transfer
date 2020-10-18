@@ -24,7 +24,8 @@ public interface PaymentService {
      * @param currency
      * @return new Payments
      */
-    PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency) throws ResourceNotFoundException, BadInputException;
+    PaymentResponse createPayment(PaymentsRequest paymentsRequest, String type, String currency, String ipAddres)
+            throws ResourceNotFoundException, BadInputException;
 
     /** This method create cancel payment and calculate cancel fee based on the number of hours since the payment was created.
      * Also check if this payments can be canceled. If day is different or payments is already canceled, method return exception.
