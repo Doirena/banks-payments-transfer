@@ -1,4 +1,4 @@
-package com.dovile.bankspaymentstransfer.findclientcountry;
+package com.dovile.bankspaymentstransfer.externalwebforinfo;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,7 +11,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
 
-public class ReadReturnCountry {
+/**
+ *
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
+public class ReadReturnCountry extends InfoFromIP {
+
     private final static Logger logger = Logger.getLogger(ReadReturnCountry.class.getName());
 
     public final String url = "http://ip-api.com/xml/";
@@ -21,7 +26,7 @@ public class ReadReturnCountry {
      * @param url
      * @return return inputStream
      */
-    private InputStream getUrl(String url, String ipAddress) {
+    InputStream getUrl(String url, String ipAddress) {
         URL obj = null;
         try {
             obj = new URL(url +ipAddress);
@@ -40,7 +45,7 @@ public class ReadReturnCountry {
     /**
      * @return data from xml file, where will be type and rate
      */
-   public String getData(String ipAddress) {
+   public String getCountry (String ipAddress) {
         String countryName = null;
 
         logger.info("Connetion for the parse data");
