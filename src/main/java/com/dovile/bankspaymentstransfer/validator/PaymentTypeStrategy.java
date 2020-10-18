@@ -4,6 +4,10 @@ import com.dovile.bankspaymentstransfer.domain.request.PaymentsRequest;
 import com.dovile.bankspaymentstransfer.exceptions.BadInputException;
 import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 
+/**
+ *
+ * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
+ */
 public interface PaymentTypeStrategy {
     /**
      * This method make validation for all enter field.

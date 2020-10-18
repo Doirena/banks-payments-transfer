@@ -7,6 +7,7 @@ import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
 import static com.dovile.bankspaymentstransfer.validator.TypeEnum.TYPE2;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class PaymentTypeTwo implements PaymentTypeStrategy {

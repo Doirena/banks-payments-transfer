@@ -8,6 +8,7 @@ import com.dovile.bankspaymentstransfer.validator.checkiban_biccodes.CheckBicCod
 import static com.dovile.bankspaymentstransfer.validator.TypeEnum.TYPE3;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class PaymentTypeThree implements PaymentTypeStrategy {

@@ -9,6 +9,7 @@ import java.util.Locale;
 import static com.dovile.bankspaymentstransfer.validator.TypeEnum.valueOf;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public class PaymentValidation {
@@ -27,20 +28,20 @@ public class PaymentValidation {
         try {
             valueOf(type);
         } catch (Exception e) {
-            throw new ResourceNotFoundException("Type is Invalid");
+            throw new ResourceNotFoundException("Type is invalid");
         }
         switch (valueOf(type)) {
             case TYPE1:
                 context = new PaymentTypeContext(new PaymentTypeOne());
-                context.ValidByTypeStrategy(paymentsRequest, currency);
+                context.validByTypeStrategy(paymentsRequest, currency);
                 break;
             case TYPE2:
                 context = new PaymentTypeContext(new PaymentTypeTwo());
-                context. ValidByTypeStrategy(paymentsRequest, currency);
+                context.validByTypeStrategy(paymentsRequest, currency);
                 break;
             case TYPE3:
                 context = new PaymentTypeContext(new PaymentTypeThree());
-                context. ValidByTypeStrategy(paymentsRequest, currency);
+                context.validByTypeStrategy(paymentsRequest, currency);
                 break;
             default:
                 throw new ResourceNotFoundException("Not found type " + type);

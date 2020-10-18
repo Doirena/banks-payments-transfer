@@ -1,6 +1,7 @@
 package com.dovile.bankspaymentstransfer.validator;
 
 /**
+ *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
 public enum TypeEnum {
