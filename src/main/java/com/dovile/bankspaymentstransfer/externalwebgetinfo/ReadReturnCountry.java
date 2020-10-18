@@ -1,4 +1,4 @@
-package com.dovile.bankspaymentstransfer.externalwebforinfo;
+package com.dovile.bankspaymentstransfer.externalwebgetinfo;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

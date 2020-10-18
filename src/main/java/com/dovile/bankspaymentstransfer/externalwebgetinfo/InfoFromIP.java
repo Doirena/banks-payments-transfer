@@ -1,4 +1,4 @@
-package com.dovile.bankspaymentstransfer.externalwebforinfo;
+package com.dovile.bankspaymentstransfer.externalwebgetinfo;
 
 import java.io.InputStream;
 
