@@ -21,7 +21,7 @@ public class PaymentValidation {
      * @throws BadInputException
      * @throws ResourceNotFoundException
      */
-    public void isValidInput(PaymentsRequest paymentsRequest, String type, String currency) throws BadInputException, ResourceNotFoundException {
+    public static void isValidInput(PaymentsRequest paymentsRequest, String type, String currency) throws BadInputException, ResourceNotFoundException {
         type = type.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
         currency = currency.replaceAll("\\s", "").toUpperCase(Locale.ROOT);
         PaymentTypeContext context;
