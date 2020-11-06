@@ -8,12 +8,13 @@ import com.dovile.bankspaymentstransfer.exceptions.ResourceNotFoundException;
  *
  * @author Dovile Barkauskaite <barkauskaite.dovile@gmail.com>
  */
-public class PaymentTypeContext {
+public class PaymentTypeContext<T extends PaymentTypeStrategy> {
 
-    private PaymentTypeStrategy strategy;
+//    private PaymentTypeStrategy strategy;
+        private T strategy;
 
-    public PaymentTypeContext(PaymentTypeStrategy strategy){
-        this.strategy = strategy;
+    public PaymentTypeContext(T obj){
+        this.strategy = obj;
     }
     public boolean validByTypeStrategy(PaymentsRequest paymentsRequest, String currency)
             throws ResourceNotFoundException, BadInputException {
